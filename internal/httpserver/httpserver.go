@@ -19,7 +19,7 @@ type httpServer struct {
 	cfg Config
 }
 
-func New(cfg Config) (*httpServer, error) {
+func New(cfg Config, svc service.Companies) (*httpServer, error) {
 	srv := new(httpServer)
 
 	err := validateCfg(cfg)
@@ -27,11 +27,7 @@ func New(cfg Config) (*httpServer, error) {
 		return nil, fmt.Errorf("invalid http server configuration: %w", err)
 	}
 	srv.cfg = cfg
-
-	srv.Companies, err = service.New(cfg.Service)
-	if err != nil {
-		return nil, fmt.Errorf("service initialization failed: %w", err)
-	}
+	srv.Companies = svc
 
 	return srv, nil
 }
