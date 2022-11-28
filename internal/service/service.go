@@ -8,7 +8,7 @@ import (
 
 // Companies interface exposes all functionality of Companies service
 type Companies interface {
-	CreateCompany(company *dto.Company) error
+	CreateCompany(company *dto.Company) (*dto.Company, error)
 	GetCompany(id string) (*dto.Company, error)
 	EditCompany() error // TODO
 	DeleteCompany(id string) error

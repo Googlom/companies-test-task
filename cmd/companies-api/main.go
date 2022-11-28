@@ -52,3 +52,5 @@ func httpBinder(srv httpserver.Server, r *gin.Engine) {
 	r.PATCH("/companies/:id", routes.EditCompany(srv))
 	r.DELETE("/companies/:id", routes.DeleteCompany(srv))
 }
+
+// TODO: handle invalid company type on create/update

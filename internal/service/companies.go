@@ -5,14 +5,14 @@ import (
 	"companies-test-task/pkg/dto"
 )
 
-func (c *companiesSvc) CreateCompany(company *dto.Company) error {
-	//TODO implement me
-	err := c.storage.CreateCompany(models.CompanyFromDto(company))
+func (c *companiesSvc) CreateCompany(company *dto.Company) (*dto.Company, error) {
+	dbComp := models.CompanyFromDto(company)
+	err := c.storage.CreateCompany(dbComp)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return dbComp.ToDto(), nil
 }
 
 func (c *companiesSvc) GetCompany(id string) (*dto.Company, error) {
@@ -35,7 +35,6 @@ func (c *companiesSvc) EditCompany() error {
 }
 
 func (c *companiesSvc) DeleteCompany(id string) error {
-	//TODO implement me
 	err := c.storage.DeleteCompany(id)
 	if err != nil {
 		return err

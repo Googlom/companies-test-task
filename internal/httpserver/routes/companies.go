@@ -2,6 +2,7 @@ package routes
 
 import (
 	"companies-test-task/internal/httpserver"
+	"companies-test-task/pkg/dto"
 	"fmt"
 	"log"
 	"net/http"
@@ -15,13 +16,19 @@ func CreateCompany(srv httpserver.Server) gin.HandlerFunc {
 	}
 
 	return func(c *gin.Context) {
-		// TODO
-		err := srv.CreateCompany(nil)
-		if err != nil {
-			return
+		var dtoComp dto.Company
+		if err := c.BindJSON(&dtoComp); err != nil {
+			fmt.Println(err)
+			return // TODO: log me properly
 		}
 
-		fmt.Println("POST")
+		resultComp, err := srv.CreateCompany(&dtoComp)
+		if err != nil {
+			fmt.Println(err)
+			return // TODO: log me properly
+		}
+
+		c.JSON(http.StatusCreated, resultComp)
 	}
 }
 
@@ -34,7 +41,7 @@ func GetCompany(srv httpserver.Server) gin.HandlerFunc {
 		comp, err := srv.GetCompany(c.Param("id"))
 		if err != nil {
 			fmt.Println(err)
-			return // TODO: log me
+			return // TODO: log me properly
 		}
 
 		c.JSON(http.StatusOK, comp)
@@ -63,12 +70,12 @@ func DeleteCompany(srv httpserver.Server) gin.HandlerFunc {
 	}
 
 	return func(c *gin.Context) {
-		// TODO
-		err := srv.DeleteCompany("")
+		err := srv.DeleteCompany(c.Param("id"))
 		if err != nil {
-			return
+			fmt.Println(err)
+			return // TODO: log me properly
 		}
 
-		fmt.Println("DELETE")
+		c.Status(http.StatusOK)
 	}
 }
