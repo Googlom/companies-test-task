@@ -19,12 +19,14 @@ func CreateCompany(srv httpserver.Server) gin.HandlerFunc {
 		var dtoComp dto.Company
 		if err := c.BindJSON(&dtoComp); err != nil {
 			fmt.Println(err)
+			c.Abort()
 			return // TODO: log me properly
 		}
 
 		resultComp, err := srv.CreateCompany(&dtoComp)
 		if err != nil {
 			fmt.Println(err)
+			c.Abort()
 			return // TODO: log me properly
 		}
 
@@ -41,6 +43,7 @@ func GetCompany(srv httpserver.Server) gin.HandlerFunc {
 		comp, err := srv.GetCompany(c.Param("id"))
 		if err != nil {
 			fmt.Println(err)
+			c.Abort()
 			return // TODO: log me properly
 		}
 
@@ -73,6 +76,7 @@ func DeleteCompany(srv httpserver.Server) gin.HandlerFunc {
 		err := srv.DeleteCompany(c.Param("id"))
 		if err != nil {
 			fmt.Println(err)
+			c.Abort()
 			return // TODO: log me properly
 		}
 

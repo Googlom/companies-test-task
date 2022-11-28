@@ -8,7 +8,8 @@ import (
 type Config struct {
 	Service service.Config
 
-	Port int
+	HmacSecret string
+	Port       int
 }
 
 func validateCfg(cfg Config) error {
