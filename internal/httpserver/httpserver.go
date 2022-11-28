@@ -1,0 +1,49 @@
+package httpserver
+
+import (
+	"companies-test-task/internal/service"
+	"fmt"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
+)
+
+type Server interface {
+	service.Companies
+}
+
+// httpServer manages the internal state of Server
+type httpServer struct {
+	service.Companies
+
+	cfg Config
+}
+
+func New(cfg Config) (*httpServer, error) {
+	srv := new(httpServer)
+
+	err := validateCfg(cfg)
+	if err != nil {
+		return nil, fmt.Errorf("invalid http server configuration: %w", err)
+	}
+	srv.cfg = cfg
+
+	srv.Companies, err = service.New(cfg.Service)
+	if err != nil {
+		return nil, fmt.Errorf("service initialization failed: %w", err)
+	}
+
+	return srv, nil
+}
+
+func (srv *httpServer) Start(binder func(Server, *gin.Engine)) error {
+	eng := gin.Default()
+	binder(srv, eng)
+
+	err := eng.Run(":" + strconv.Itoa(srv.cfg.Port))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
