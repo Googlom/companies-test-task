@@ -14,12 +14,13 @@ import (
 func main() {
 	serverConfig := httpserver.Config{Port: 8080} // TODO:
 	serviceConfig := service.Config{}             // TODO:
-	dbConfig := db.Config{ // TODO:
-		Host:        "localhost",
-		Port:        5432,
-		User:        "postgres",
-		Password:    "12345",
-		CompaniesDb: "companies",
+	dbConfig := db.Config{                        // TODO:
+		Host:           "localhost",
+		Port:           5432,
+		User:           "postgres",
+		Password:       "12345",
+		DbName:         "companies",
+		MigrationsPath: "db_migration",
 	}
 
 	//////////////////////////////////////////////
