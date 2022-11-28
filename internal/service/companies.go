@@ -1,12 +1,13 @@
 package service
 
 import (
-	"companies-test-task/pkg/models"
+	"companies-test-task/internal/models"
+	"companies-test-task/pkg/dto"
 )
 
-func (c *companiesSvc) CreateCompany(company *models.Company) error {
+func (c *companiesSvc) CreateCompany(company *dto.Company) error {
 	//TODO implement me
-	err := c.storage.CreateCompany(company)
+	err := c.storage.CreateCompany(models.CompanyFromDto(company))
 	if err != nil {
 		return err
 	}
@@ -14,14 +15,13 @@ func (c *companiesSvc) CreateCompany(company *models.Company) error {
 	return nil
 }
 
-func (c *companiesSvc) GetCompany(id string) (*models.Company, error) {
-	//TODO implement me
-	cmp, err := c.storage.GetCompany(id)
+func (c *companiesSvc) GetCompany(id string) (*dto.Company, error) {
+	dbCompany, err := c.storage.GetCompany(id)
 	if err != nil {
 		return nil, err
 	}
 
-	return cmp, nil
+	return dbCompany.ToDto(), nil
 }
 
 func (c *companiesSvc) EditCompany() error {

@@ -1,14 +1,15 @@
 package db
 
 import (
-	"companies-test-task/pkg/models"
+	"companies-test-task/internal/models"
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/pgx"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 // Storage exposes db methods for interacting with stored company items
@@ -21,7 +22,7 @@ type Storage interface {
 
 // psql implements Postgres adapter for Companies storage
 type psql struct {
-	db *pgx.Conn
+	db *pgxpool.Pool
 }
 
 func New(cfg Config) (*psql, error) {
@@ -33,7 +34,7 @@ func New(cfg Config) (*psql, error) {
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DbName,
 	)
-	db, err := pgx.Connect(context.Background(), connString)
+	db, err := pgxpool.New(context.Background(), connString)
 	if err != nil {
 		return nil, fmt.Errorf("open postgres connection failed: %w", err)
 	}
@@ -54,5 +55,10 @@ func runMigrations(cfg Config) error {
 		return fmt.Errorf("open postgres connection failed: %w", err)
 	}
 
-	return m.Up()
+	err = m.Up()
+	if errors.Is(err, migrate.ErrNoChange) {
+		return nil
+	}
+
+	return err
 }

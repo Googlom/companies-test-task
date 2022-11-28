@@ -4,6 +4,7 @@ import (
 	"companies-test-task/internal/httpserver"
 	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -30,13 +31,13 @@ func GetCompany(srv httpserver.Server) gin.HandlerFunc {
 	}
 
 	return func(c *gin.Context) {
-		// TODO
-		_, err := srv.GetCompany("")
+		comp, err := srv.GetCompany(c.Param("id"))
 		if err != nil {
-			return
+			fmt.Println(err)
+			return // TODO: log me
 		}
 
-		fmt.Println("GET")
+		c.JSON(http.StatusOK, comp)
 	}
 }
 

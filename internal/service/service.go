@@ -2,14 +2,14 @@ package service
 
 import (
 	"companies-test-task/internal/db"
-	"companies-test-task/pkg/models"
+	"companies-test-task/pkg/dto"
 	"fmt"
 )
 
 // Companies interface exposes all functionality of Companies service
 type Companies interface {
-	CreateCompany(company *models.Company) error
-	GetCompany(id string) (*models.Company, error)
+	CreateCompany(company *dto.Company) error
+	GetCompany(id string) (*dto.Company, error)
 	EditCompany() error // TODO
 	DeleteCompany(id string) error
 }
