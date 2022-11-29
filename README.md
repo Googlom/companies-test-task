@@ -5,17 +5,7 @@
 
 # How to run:
 1) Change your working directory to project root
-2) Create your own `.env` file. You should set your own `HMAC_SECRET` and `DB_PASSWORD`. Other params may also be changed. Content should be similar to:
-```dotenv
-LISTEN_ADDR=:8080
-HMAC_SECRET=233972089023bb1838ae877063b3080c7a4fefd57a1a8125a5ff29546b0ea1f1
-DB_HOST=db
-DB_PORT=5432
-DB_USER=companies
-DB_PASSWORD=12345
-DB_NAME=companies
-DB_MIGRATIONS=db_migration
-```
+2) Create your own `.env` file. You should set your own `HMAC_SECRET` and `DB_PASSWORD`. Other params may also be changed. You may take example from `.env.example`.
 3) Run shell script that is located at `build/build_and_up.sh` without any params. Remember that your working directory must be the project root.
 4) You may import Postman collection at `tests/postman-collection/companies-test-task.postman_collection.json` for testing.
 5) After finishing testing run shell script `build/down.sh` to stop and delete all containers.

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"companies-test-task/internal/config"
 	"companies-test-task/internal/db"
 	"companies-test-task/internal/httpserver"
 	"companies-test-task/internal/httpserver/auth"
@@ -13,7 +14,7 @@ import (
 )
 
 func main() {
-	cfg, err := loadConfiguration()
+	cfg, err := config.Load()
 	if err != nil {
 		log.Fatalf("configration failed: %s", err)
 	}
