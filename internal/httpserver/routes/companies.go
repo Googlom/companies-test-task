@@ -4,21 +4,17 @@ import (
 	"companies-test-task/internal/httpserver"
 	"companies-test-task/internal/httpserver/errors"
 	"companies-test-task/pkg/dto"
-	"io/ioutil"
-	"log"
+	"io"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func CreateCompany(srv httpserver.Server) gin.HandlerFunc {
-	if srv == nil {
-		log.Fatalln("a nil srv was passed to CreateCompany handler")
-	}
-
 	return func(c *gin.Context) {
 		var dtoComp dto.Company
 		if err := c.BindJSON(&dtoComp); err != nil {
+			_ = c.Error(err)
 			return
 		}
 
@@ -33,10 +29,6 @@ func CreateCompany(srv httpserver.Server) gin.HandlerFunc {
 }
 
 func GetCompany(srv httpserver.Server) gin.HandlerFunc {
-	if srv == nil {
-		log.Fatalln("a nil srv was passed to GetCompany handler")
-	}
-
 	return func(c *gin.Context) {
 		comp, err := srv.GetCompany(c.Param("id"))
 		if err != nil {
@@ -49,12 +41,8 @@ func GetCompany(srv httpserver.Server) gin.HandlerFunc {
 }
 
 func EditCompany(srv httpserver.Server) gin.HandlerFunc {
-	if srv == nil {
-		log.Fatalln("a nil srv was passed to EditCompany handler")
-	}
-
 	return func(c *gin.Context) {
-		reqBodyBytes, err := ioutil.ReadAll(c.Request.Body)
+		reqBodyBytes, err := io.ReadAll(c.Request.Body)
 		if err != nil {
 			_ = c.Error(&errors.APIError{Code: http.StatusBadRequest, Message: "invalid request body: " + err.Error()})
 			return
@@ -70,10 +58,6 @@ func EditCompany(srv httpserver.Server) gin.HandlerFunc {
 }
 
 func DeleteCompany(srv httpserver.Server) gin.HandlerFunc {
-	if srv == nil {
-		log.Fatalln("a nil srv was passed to DeleteCompany handler")
-	}
-
 	return func(c *gin.Context) {
 		err := srv.DeleteCompany(c.Param("id"))
 		if err != nil {

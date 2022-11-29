@@ -20,16 +20,22 @@ type Storage interface {
 	DeleteCompany(id string) error
 }
 
+type Config struct {
+	Host     string // host addr
+	Port     int    // port
+	User     string // user
+	Password string // user password
+	DbName   string // companies database name
+
+	MigrationsPath string // directory where migration scripts are stored
+}
+
 // psql implements Postgres adapter for Companies storage
 type psql struct {
 	db *pgxpool.Pool
 }
 
 func New(cfg Config) (*psql, error) {
-	if err := validateCfg(cfg); err != nil {
-		return nil, fmt.Errorf("invalid database configuration: %w", err)
-	}
-
 	connString := fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DbName,

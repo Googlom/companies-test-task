@@ -3,7 +3,6 @@ package service
 import (
 	"companies-test-task/internal/db"
 	"companies-test-task/pkg/dto"
-	"fmt"
 )
 
 // Companies interface exposes all functionality of Companies service
@@ -21,14 +20,9 @@ type companiesSvc struct {
 }
 
 // New initializes Companies service handler
-func New(cfg Config, storage db.Storage) (*companiesSvc, error) {
+func New(cfg Config, storage db.Storage) *companiesSvc {
 	svc := new(companiesSvc)
-
-	if err := validateConfig(cfg); err != nil {
-		return nil, fmt.Errorf("invalid companies service configuration: %w", err)
-	}
 	svc.cfg = cfg
 	svc.storage = storage
-
-	return svc, nil
+	return svc
 }

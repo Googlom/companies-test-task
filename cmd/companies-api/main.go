@@ -14,35 +14,18 @@ import (
 )
 
 func main() {
-	serverConfig := httpserver.Config{ // TODO: move to env
-		HmacSecret: "233972089023bb1838ae877063b3080c7a4fefd57a1a8125a5ff29546b0ea1f1",
-		Port:       8080,
-	}
-	serviceConfig := service.Config{} // TODO: move to env
-	dbConfig := db.Config{            // TODO: move to env
-		Host:           "localhost",
-		Port:           5432,
-		User:           "postgres",
-		Password:       "12345",
-		DbName:         "companies",
-		MigrationsPath: "db_migration",
+	cfg, err := loadConfiguration()
+	if err != nil {
+		log.Fatalf("configration failed: %s", err)
 	}
 
-	//////////////////////////////////////////////
-	storage, err := db.New(dbConfig)
+	storage, err := db.New(cfg.Database)
 	if err != nil {
 		log.Fatalf("database initialization failed: %s\n", err)
 	}
 
-	svc, err := service.New(serviceConfig, storage)
-	if err != nil {
-		log.Fatalf("service initialization failed: %s\n", err)
-	}
-
-	httpServer, err := httpserver.New(serverConfig, svc)
-	if err != nil {
-		log.Fatalf("failed to initialize server: %s\n", err)
-	}
+	svc := service.New(cfg.Service, storage)
+	httpServer := httpserver.New(cfg.HttpServer, svc)
 
 	err = httpServer.Start(routeBinder)
 	if err != nil {
@@ -55,7 +38,7 @@ func routeBinder(cfg httpserver.Config, srv httpserver.Server, eng *gin.Engine) 
 	eng.Use(errors.Middleware(), gin.Recovery())
 	eng.GET("/companies/:id", routes.GetCompany(srv))
 
-	authMw := auth.JwtAuthMiddleware([]byte(cfg.HmacSecret))
+	authMw := auth.JwtMiddleware([]byte(cfg.HmacSecret))
 	eng.Use(authMw).POST("/companies", routes.CreateCompany(srv))
 	eng.Use(authMw).PATCH("/companies/:id", routes.EditCompany(srv))
 	eng.Use(authMw).DELETE("/companies/:id", routes.DeleteCompany(srv))
