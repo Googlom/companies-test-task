@@ -1,11 +1,19 @@
 package errors
 
-import "github.com/gin-gonic/gin"
+import (
+	"fmt"
+
+	"github.com/gin-gonic/gin"
+)
 
 // APIError struct
 type APIError struct {
 	Code    int
 	Message string
+}
+
+func (e *APIError) Error() string {
+	return fmt.Sprintf("%d: %s", e.Code, e.Message)
 }
 
 // RespondWithError function handler error

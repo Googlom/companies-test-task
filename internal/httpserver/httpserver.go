@@ -33,7 +33,7 @@ func New(cfg Config, svc service.Companies) (*httpServer, error) {
 }
 
 func (srv *httpServer) Start(binder func(Config, Server, *gin.Engine)) error {
-	eng := gin.Default()
+	eng := gin.New()
 	binder(srv.cfg, srv, eng)
 
 	err := eng.Run(":" + strconv.Itoa(srv.cfg.Port))

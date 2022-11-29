@@ -4,6 +4,7 @@ import (
 	"companies-test-task/internal/db"
 	"companies-test-task/internal/httpserver"
 	"companies-test-task/internal/httpserver/auth"
+	"companies-test-task/internal/httpserver/errors"
 	"companies-test-task/internal/httpserver/routes"
 	"companies-test-task/internal/service"
 	"log"
@@ -50,13 +51,14 @@ func main() {
 	os.Exit(0)
 }
 
-func routeBinder(cfg httpserver.Config, srv httpserver.Server, r *gin.Engine) {
-	r.GET("/companies/:id", routes.GetCompany(srv))
+func routeBinder(cfg httpserver.Config, srv httpserver.Server, eng *gin.Engine) {
+	eng.Use(errors.Middleware(), gin.Recovery())
+	eng.GET("/companies/:id", routes.GetCompany(srv))
 
 	authMw := auth.JwtAuthMiddleware([]byte(cfg.HmacSecret))
-	r.Use(authMw).POST("/companies", routes.CreateCompany(srv))
-	r.Use(authMw).PATCH("/companies/:id", routes.EditCompany(srv))
-	r.Use(authMw).DELETE("/companies/:id", routes.DeleteCompany(srv))
+	eng.Use(authMw).POST("/companies", routes.CreateCompany(srv))
+	eng.Use(authMw).PATCH("/companies/:id", routes.EditCompany(srv))
+	eng.Use(authMw).DELETE("/companies/:id", routes.DeleteCompany(srv))
 }
 
 // TODO: handle invalid company type on create/update
