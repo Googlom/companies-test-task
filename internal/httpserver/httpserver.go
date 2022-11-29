@@ -2,6 +2,7 @@ package httpserver
 
 import (
 	"companies-test-task/internal/service"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
@@ -33,5 +34,6 @@ func (srv *httpServer) Start(binder func(Config, Server, *gin.Engine)) error {
 	eng := gin.New()
 	binder(srv.cfg, srv, eng)
 
+	log.Printf("server is listening at %s\n", srv.cfg.ListenAddr)
 	return eng.Run(srv.cfg.ListenAddr)
 }

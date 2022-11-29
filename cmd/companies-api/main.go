@@ -8,7 +8,6 @@ import (
 	"companies-test-task/internal/httpserver/routes"
 	"companies-test-task/internal/service"
 	"log"
-	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,7 +30,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("server closed unexpectedly: %s", err)
 	}
-	os.Exit(0)
 }
 
 func routeBinder(cfg httpserver.Config, srv httpserver.Server, eng *gin.Engine) {
