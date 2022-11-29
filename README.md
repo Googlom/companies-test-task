@@ -7,8 +7,12 @@
 1) Change your working directory to project root
 2) Create your own `.env` file. You should set your own `HMAC_SECRET` and `DB_PASSWORD`. Other params may also be changed. You may take example from `.env.example`.
 3) Run shell script that is located at `build/build_and_up.sh` without any params. Remember that your working directory must be the project root.
-4) You may import Postman collection at `tests/postman-collection/companies-test-task.postman_collection.json` for testing.
-5) After finishing testing run shell script `build/down.sh` to stop and delete all containers.
+4) After services started run the migration script to initialize db schema:
+```shell
+docker exec companies-api /app/migrate
+```
+5) You may import Postman collection at `tests/postman-collection/companies-test-task.postman_collection.json` for testing.
+6) After finishing testing run shell script `build/down.sh` to stop and delete all containers.
 
 # Environmental variable description:
 - `LISTEN_ADDR` socket address that companies service will listen at. Default is `:8080`;

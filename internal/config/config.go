@@ -33,21 +33,25 @@ func Load() (*configContainer, error) {
 			HmacSecret: envOrDefaultString(jwtHmacSecretEnv, ""),
 			ListenAddr: envOrDefaultString(httpListenEnv, ":8080"),
 		},
-		Service: service.Config{},
-		Database: db.Config{
-			Host:           envOrDefaultString(dbHostEnv, "localhost"),
-			Port:           envOrDefaultInt(dbPortEnv, 5432),
-			User:           envOrDefaultString(dbUserEnv, "companies"),
-			Password:       envOrDefaultString(dbPasswordEnv, ""),
-			DbName:         envOrDefaultString(dbNameEnv, "companies"),
-			MigrationsPath: envOrDefaultString(dbMigrationsPathEnv, "db_migration"),
-		},
+		Service:  service.Config{},
+		Database: LoadDatabase(),
 	}
 	if err := validateConfig(cfg); err != nil {
 		return nil, err
 	}
 
 	return &cfg, nil
+}
+
+func LoadDatabase() db.Config {
+	return db.Config{
+		Host:           envOrDefaultString(dbHostEnv, "localhost"),
+		Port:           envOrDefaultInt(dbPortEnv, 5432),
+		User:           envOrDefaultString(dbUserEnv, "companies"),
+		Password:       envOrDefaultString(dbPasswordEnv, ""),
+		DbName:         envOrDefaultString(dbNameEnv, "companies"),
+		MigrationsPath: envOrDefaultString(dbMigrationsPathEnv, "db_migration"),
+	}
 }
 
 func validateConfig(cfg configContainer) error {
