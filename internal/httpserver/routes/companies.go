@@ -23,7 +23,7 @@ func CreateCompany(srv httpserver.Server) gin.HandlerFunc {
 
 		resultComp, err := srv.CreateCompany(&dtoComp)
 		if err != nil {
-			c.Error(err)
+			_ = c.Error(err)
 			return
 		}
 
@@ -39,7 +39,7 @@ func GetCompany(srv httpserver.Server) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		comp, err := srv.GetCompany(c.Param("id"))
 		if err != nil {
-			c.Error(err)
+			_ = c.Error(err)
 			return
 		}
 
@@ -71,7 +71,7 @@ func DeleteCompany(srv httpserver.Server) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := srv.DeleteCompany(c.Param("id"))
 		if err != nil {
-			c.Error(err)
+			_ = c.Error(err)
 			return
 		}
 

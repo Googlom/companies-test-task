@@ -36,10 +36,10 @@ func login(hmacSecret []byte) http.HandlerFunc {
 		})
 		tokenString, err := token.SignedString(hmacSecret)
 		if err != nil {
-			json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+			_ = json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
 			return
 		}
 
-		json.NewEncoder(w).Encode(map[string]string{"token": tokenString})
+		_ = json.NewEncoder(w).Encode(map[string]string{"token": tokenString})
 	}
 }
