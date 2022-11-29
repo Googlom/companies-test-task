@@ -21,14 +21,14 @@ const (
 	dbMigrationsPathEnv = "DB_MIGRATIONS"
 )
 
-type ConfigContainer struct {
+type configContainer struct {
 	HttpServer httpserver.Config
 	Service    service.Config
 	Database   db.Config
 }
 
-func loadConfiguration() (*ConfigContainer, error) {
-	cfg := ConfigContainer{
+func loadConfiguration() (*configContainer, error) {
+	cfg := configContainer{
 		HttpServer: httpserver.Config{
 			HmacSecret: envOrDefaultString(jwtHmacSecretEnv, ""),
 			ListenAddr: envOrDefaultString(httpListenEnv, ":8080"),
@@ -50,7 +50,7 @@ func loadConfiguration() (*ConfigContainer, error) {
 	return &cfg, nil
 }
 
-func validateConfig(cfg ConfigContainer) error {
+func validateConfig(cfg configContainer) error {
 	if len(cfg.HttpServer.HmacSecret) == 0 {
 		return fmt.Errorf("JWT HMAC secret must be set with '%s' env var", jwtHmacSecretEnv)
 	}

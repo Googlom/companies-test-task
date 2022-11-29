@@ -13,6 +13,9 @@ type Companies interface {
 	DeleteCompany(id string) error
 }
 
+// Config holds the configuration of Companies service handler
+type Config struct{}
+
 // companiesSvc manages the internal state of Companies service
 type companiesSvc struct {
 	cfg     Config
