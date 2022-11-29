@@ -10,7 +10,7 @@ import (
 type Companies interface {
 	CreateCompany(company *dto.Company) (*dto.Company, error)
 	GetCompany(id string) (*dto.Company, error)
-	EditCompany() error // TODO
+	EditCompany(id string, patchJsonReq []byte) error
 	DeleteCompany(id string) error
 }
 

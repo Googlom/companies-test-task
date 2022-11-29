@@ -2,8 +2,9 @@ package routes
 
 import (
 	"companies-test-task/internal/httpserver"
+	"companies-test-task/internal/httpserver/errors"
 	"companies-test-task/pkg/dto"
-	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -53,13 +54,18 @@ func EditCompany(srv httpserver.Server) gin.HandlerFunc {
 	}
 
 	return func(c *gin.Context) {
-		// TODO
-		err := srv.EditCompany()
+		reqBodyBytes, err := ioutil.ReadAll(c.Request.Body)
 		if err != nil {
+			_ = c.Error(&errors.APIError{Code: http.StatusBadRequest, Message: "invalid request body: " + err.Error()})
 			return
 		}
 
-		fmt.Println("PATCH")
+		if err = srv.EditCompany(c.Param("id"), reqBodyBytes); err != nil {
+			_ = c.Error(err)
+			return
+		}
+
+		c.Status(http.StatusOK)
 	}
 }
 

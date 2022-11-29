@@ -19,7 +19,10 @@ func Middleware() gin.HandlerFunc {
 			return
 		}
 
-		if err.IsType(gin.ErrorTypeBind) { // Gin struct binding validation errors
+		var apiErr *APIError
+		if errors.As(err.Err, &apiErr) {
+			RespondWithError(apiErr.Code, apiErr.Message, c)
+		} else if err.IsType(gin.ErrorTypeBind) { // Gin struct binding validation errors
 			RespondWithError(http.StatusBadRequest, err.Error(), c)
 		} else if errors.Is(err.Err, pgx.ErrNoRows) {
 			RespondWithError(http.StatusNotFound, "Record not found", c)
@@ -27,7 +30,8 @@ func Middleware() gin.HandlerFunc {
 			RespondWithError(http.StatusConflict, "Duplicate field value", c)
 		} else {
 			RespondWithError(http.StatusInternalServerError, "Internal server error", c)
-			log.Println(err.Error())
 		}
+		
+		log.Println(err.Error())
 	}
 }
