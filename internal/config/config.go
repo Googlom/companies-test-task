@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"companies-test-task/internal/db"
@@ -27,7 +27,7 @@ type configContainer struct {
 	Database   db.Config
 }
 
-func loadConfiguration() (*configContainer, error) {
+func Load() (*configContainer, error) {
 	cfg := configContainer{
 		HttpServer: httpserver.Config{
 			HmacSecret: envOrDefaultString(jwtHmacSecretEnv, ""),
