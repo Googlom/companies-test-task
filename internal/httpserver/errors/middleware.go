@@ -22,8 +22,6 @@ func Middleware() gin.HandlerFunc {
 		var apiErr *APIError
 		if errors.As(err.Err, &apiErr) {
 			RespondWithError(apiErr.Code, apiErr.Message, c)
-		} else if err.IsType(gin.ErrorTypeBind) { // Gin struct binding validation errors
-			RespondWithError(http.StatusBadRequest, err.Error(), c)
 		} else if errors.Is(err.Err, pgx.ErrNoRows) {
 			RespondWithError(http.StatusNotFound, "Record not found", c)
 		} else if strings.Contains(err.Error(), "duplicate key") {

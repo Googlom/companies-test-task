@@ -1,6 +1,7 @@
 package models
 
 import (
+	"companies-test-task/internal/httpserver/errors"
 	"companies-test-task/pkg/dto"
 	"database/sql"
 )
@@ -23,6 +24,20 @@ func (c *Company) ToDto() *dto.Company {
 		Registered:     c.Registered,
 		CompanyType:    companyTypeToString(c.CompanyType),
 	}
+}
+
+func (c *Company) Validate() error {
+	if len(c.Name) < 2 || len(c.Name) > 15 {
+		return &errors.APIError{Code: 400, Message: "name length must be in range from 2 to 15"}
+	}
+	if len(c.Description.String) > 3000 {
+		return &errors.APIError{Code: 400, Message: "description length must not exceed 3000 chars"}
+	}
+	if c.CompanyType == UndefinedType {
+		return &errors.APIError{Code: 400, Message: "invalid company type"}
+	}
+
+	return nil
 }
 
 func CompanyFromDto(dc *dto.Company) *Company {

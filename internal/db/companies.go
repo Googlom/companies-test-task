@@ -6,6 +6,10 @@ import (
 )
 
 func (p *psql) CreateCompany(comp *models.Company) error {
+	if err := comp.Validate(); err != nil {
+		return err
+	}
+
 	const query = `
 	INSERT INTO companies (name, description, employees, registered, company_type)   
 	VALUES ($1, $2, $3, $4, $5)
@@ -36,6 +40,10 @@ func (p *psql) GetCompany(id string) (*models.Company, error) {
 }
 
 func (p *psql) EditCompany(comp *models.Company) error {
+	if err := comp.Validate(); err != nil {
+		return err
+	}
+	
 	const query = `
 	UPDATE companies
 	SET name = $2,
