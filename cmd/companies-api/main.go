@@ -41,5 +41,3 @@ func routeBinder(cfg httpserver.Config, srv httpserver.Server, eng *gin.Engine) 
 	eng.Use(authMw).PATCH("/companies/:id", routes.EditCompany(srv))
 	eng.Use(authMw).DELETE("/companies/:id", routes.DeleteCompany(srv))
 }
-
-// TODO: handle invalid company type on create/update
